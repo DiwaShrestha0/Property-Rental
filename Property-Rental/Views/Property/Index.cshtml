@@ -1,0 +1,28 @@
+﻿@model IEnumerable<PropertyRental.Property>
+
+<h2>Property List</h2>
+
+<a asp-controller="Property" asp-action="Create">Add New Property</a>
+
+<table class="table mt-3">
+    <tr>
+        <th>Title</th>
+        <th>Address</th>
+        <th>Price</th>
+        <th>Actions</th>
+    </tr>
+
+    @foreach (var p in Model)
+    {
+        <tr>
+            <td>@p.Title</td>
+            <td>@p.Address</td>
+            <td>@p.Price</td>
+            <td>
+                <a href="/Property/Edit/@p.Id">Edit</a> |
+                <a href="/Property/Details/@p.Id">Details</a> |
+                <a href="/Property/Delete/@p.Id">Delete</a>
+            </td>
+        </tr>
+    }
+</table>

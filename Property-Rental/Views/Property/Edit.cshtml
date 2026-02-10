@@ -1,0 +1,19 @@
+﻿@model PropertyRental.Property
+
+<h2>Edit Property</h2>
+
+<form method="post">
+
+    <input type="hidden" name="Id" value="@Model.Id" />
+
+    <label>Title</label>
+    <input name="Title" class="form-control" value="@Model.Title" />
+
+    <label>Address</label>
+    <input name="Address" class="form-control" value="@Model.Address" />
+
+    <label>Price</label>
+    <input name="Price" class="form-control" value="@Model.Price" />
+
+    <button type="submit" class="btn btn-primary mt-3">Update</button>
+</form>
