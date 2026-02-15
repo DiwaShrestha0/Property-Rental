@@ -1,4 +1,7 @@
 ﻿<!DOCTYPE html>
+@using Microsoft.EntityFrameworkCore
+@using PropertyRental.Models
+@inject PropertyRental.ApplicationDbContext _context
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -23,9 +26,42 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+                            {
+                                var menus = _context.UserMenus
+                                    .Where(um => um.UserId == userId)
+                                    .Include(um => um.Menu)
+                                    .Select(um => um.Menu)
+                                    .ToList();
+
+                                foreach (var menu in menus)
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-controller="@menu.ControllerName" asp-action="@menu.ActionName">@menu.Name</a>
+                                    </li>
+                                }
+                            }
+                        }
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <span class="nav-link text-dark">Hello, @User.Identity.Name</span>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Logout</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

@@ -1,0 +1,55 @@
+@model PropertyRental.Models.ViewModels.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">System Dashboard</h2>
+    
+    <div class="row">
+        <!-- Total Properties Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-primary h-100">
+                <div class="card-header">Properties</div>
+                <div class="card-body">
+                    <h5 class="card-title display-4">@Model.TotalProperties</h5>
+                    <p class="card-text">Total properties listed.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Users Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-success h-100">
+                <div class="card-header">Users</div>
+                <div class="card-body">
+                    <h5 class="card-title display-4">@Model.TotalUsers</h5>
+                    <p class="card-text">Registered users.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Roles Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-warning h-100">
+                <div class="card-header">Roles</div>
+                <div class="card-body">
+                    <h5 class="card-title display-4">@Model.TotalRoles</h5>
+                    <p class="card-text">Defined system roles.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Menus Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-info h-100">
+                <div class="card-header">Menus</div>
+                <div class="card-body">
+                    <h5 class="card-title display-4">@Model.TotalMenus</h5>
+                    <p class="card-text">Active menu items.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

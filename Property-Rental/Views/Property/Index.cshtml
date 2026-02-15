@@ -2,7 +2,9 @@
 
 <h2>Property List</h2>
 
-<a asp-controller="Property" asp-action="Create">Add New Property</a>
+<a asp-controller="Property" asp-action="Create" class="btn btn-primary">
+    Add New Property
+</a>
 
 <table class="table mt-3">
     <tr>
@@ -19,9 +21,9 @@
             <td>@p.Address</td>
             <td>@p.Price</td>
             <td>
-                <a href="/Property/Edit/@p.Id">Edit</a> |
-                <a href="/Property/Details/@p.Id">Details</a> |
-                <a href="/Property/Delete/@p.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@p.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@p.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@p.Id">Delete</a>
             </td>
         </tr>
     }

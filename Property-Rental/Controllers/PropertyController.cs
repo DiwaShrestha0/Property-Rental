@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace PropertyRental
 {
+    [Authorize]
     public class PropertyController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -16,12 +18,14 @@ namespace PropertyRental
             return View(_context.Properties.ToList());
         }
 
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult Create(Property property)
         {
             _context.Properties.Add(property);
@@ -29,6 +33,7 @@ namespace PropertyRental
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult Edit(int id)
         {
             var item = _context.Properties.Find(id);
@@ -37,6 +42,7 @@ namespace PropertyRental
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult Edit(Property property)
         {
             _context.Properties.Update(property);
@@ -51,6 +57,7 @@ namespace PropertyRental
             return View(item);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             var item = _context.Properties.Find(id);
@@ -59,6 +66,7 @@ namespace PropertyRental
         }
 
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteConfirmed(int id)
         {
             var item = _context.Properties.Find(id);
