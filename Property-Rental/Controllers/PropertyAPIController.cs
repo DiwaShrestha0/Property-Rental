@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using PropertyRental.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace PropertyRental
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class PropertyAPIController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -20,6 +22,7 @@ namespace PropertyRental
 
         // GET: api/PropertyAPI
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Property>>> GetProperties()
         {
             return await _context.Properties.ToListAsync();
@@ -27,6 +30,7 @@ namespace PropertyRental
 
         // GET: api/PropertyAPI/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Property>> GetProperty(int id)
         {
             var property = await _context.Properties.FindAsync(id);

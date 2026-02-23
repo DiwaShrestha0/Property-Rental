@@ -19,6 +19,7 @@ namespace PropertyRental
             _webHostEnvironment = webHostEnvironment;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View(_context.Properties.ToList());
@@ -77,6 +78,7 @@ namespace PropertyRental
             return RedirectToAction("Index");
         }
 
+        [AllowAnonymous]
         public IActionResult Details(int id)
         {
             var item = _context.Properties.Find(id);
