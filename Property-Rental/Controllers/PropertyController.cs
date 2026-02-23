@@ -1,5 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using System;
 
 namespace PropertyRental
 {
@@ -7,10 +11,12 @@ namespace PropertyRental
     public class PropertyController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public PropertyController(ApplicationDbContext context)
+        public PropertyController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
@@ -26,8 +32,29 @@ namespace PropertyRental
 
         [HttpPost]
         [Authorize(Roles = "Admin,Manager")]
-        public IActionResult Create(Property property)
+        public IActionResult Create(Property property, IFormFile? imageFile)
         {
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "properties");
+                
+                // Ensure directory exists
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    imageFile.CopyTo(fileStream);
+                }
+
+                property.ImagePath = Path.Combine("images", "properties", uniqueFileName).Replace("\\", "/");
+            }
+
             _context.Properties.Add(property);
             _context.SaveChanges();
             return RedirectToAction("Index");
