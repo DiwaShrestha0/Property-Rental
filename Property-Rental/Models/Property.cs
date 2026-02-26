@@ -1,4 +1,7 @@
-﻿namespace PropertyRental
+﻿using System.Collections.Generic;
+using PropertyRental.Models;
+
+namespace PropertyRental
 {
     public class Property
     {
@@ -10,6 +13,10 @@
 
         public decimal Price { get; set; }
 
-        public string ImagePath { get; set; }
+        public string? ImagePath { get; set; }
+
+        public bool IsAvailable { get; set; }
+
+        public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }
 }

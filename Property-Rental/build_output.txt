@@ -1,0 +1,15 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+C:\Users\LEGION\source\repos\Property-Rental\Property-Rental\Controllers\AccountController.cs(26,101): warning CS8625: Cannot convert null literal to non-nullable reference type. [C:\Users\LEGION\source\repos\Property-Rental\Property-Rental\Property-Rental.csproj]
+C:\Users\LEGION\source\repos\Property-Rental\Property-Rental\Models\ApplicationDBContext.cs(15,22): error CS0246: The type or namespace name 'Role' could not be found (are you missing a using directive or an assembly reference?) [C:\Users\LEGION\source\repos\Property-Rental\Property-Rental\Property-Rental.csproj]
+C:\Users\LEGION\source\repos\Property-Rental\Property-Rental\Models\UserRole.cs(23,24): error CS0246: The type or namespace name 'Role' could not be found (are you missing a using directive or an assembly reference?) [C:\Users\LEGION\source\repos\Property-Rental\Property-Rental\Property-Rental.csproj]
+
+Build FAILED.
+
+C:\Users\LEGION\source\repos\Property-Rental\Property-Rental\Controllers\AccountController.cs(26,101): warning CS8625: Cannot convert null literal to non-nullable reference type. [C:\Users\LEGION\source\repos\Property-Rental\Property-Rental\Property-Rental.csproj]
+C:\Users\LEGION\source\repos\Property-Rental\Property-Rental\Models\ApplicationDBContext.cs(15,22): error CS0246: The type or namespace name 'Role' could not be found (are you missing a using directive or an assembly reference?) [C:\Users\LEGION\source\repos\Property-Rental\Property-Rental\Property-Rental.csproj]
+C:\Users\LEGION\source\repos\Property-Rental\Property-Rental\Models\UserRole.cs(23,24): error CS0246: The type or namespace name 'Role' could not be found (are you missing a using directive or an assembly reference?) [C:\Users\LEGION\source\repos\Property-Rental\Property-Rental\Property-Rental.csproj]
+    1 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:02.62

@@ -1,0 +1,74 @@
+@model PropertyRental.Models.Booking
+
+@{
+    ViewData["Title"] = "Book Property";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow-sm border-0 rounded-lg">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h2 class="mb-0">Book Property</h2>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Property Details Section -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            @if (!string.IsNullOrEmpty(Model.Property?.ImagePath))
+                            {
+                                <img src="~/@Model.Property.ImagePath" class="img-fluid rounded shadow-sm" alt="@Model.Property.Title" />
+                            }
+                            else
+                            {
+                                <div class="bg-light text-center py-5 rounded border">
+                                    <i class="bi bi-house-door display-4 text-muted"></i>
+                                    <p class="text-muted mt-2">No Image available</p>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-8">
+                            <h4 class="text-primary">@Model.Property?.Title</h4>
+                            <p class="text-muted mb-1"><i class="bi bi-geo-alt-fill me-1"></i> @Model.Property?.Address</p>
+                            <h5 class="text-success font-weight-bold">@Model.Property?.Price.ToString("C") <small class="text-muted">/ night</small></h5>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <!-- Booking Form Section -->
+                    <form asp-controller="Booking" asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="PropertyId" />
+                        
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="StartDate" class="form-label font-weight-bold">Check-in Date</label>
+                                <input asp-for="StartDate" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="StartDate" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="EndDate" class="form-label font-weight-bold">Check-out Date</label>
+                                <input asp-for="EndDate" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="EndDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                                <i class="bi bi-calendar-check me-2"></i> Confirm Booking
+                            </button>
+                            <a asp-controller="Property" asp-action="Index" class="btn btn-outline-secondary mt-2">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -23,7 +23,7 @@ namespace PropertyRental.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public virtual ICollection<UserRole> UserRoles { get; set; }
-        public virtual ICollection<UserMenu> UserMenus { get; set; }
+        public virtual ICollection<UserRole>? UserRoles { get; set; } = new List<UserRole>();
+        public virtual ICollection<UserMenu>? UserMenus { get; set; } = new List<UserMenu>();
     }
 }

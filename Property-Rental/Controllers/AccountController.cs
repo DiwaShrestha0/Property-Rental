@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PropertyRental.Models;
@@ -76,7 +77,48 @@ namespace PropertyRental.Controllers
                 return Redirect(returnUrl);
             }
 
-            return RedirectToAction("Index", "Property");
+            return RedirectToAction("Index", "Dashboard");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register([Bind("Username,Email,PasswordHash")] User user)
+        {
+            if (ModelState.IsValid)
+            {
+                // Prevent duplicate usernames
+                var exists = await _context.Users.AnyAsync(u => u.Username == user.Username);
+                if (exists)
+                {
+                    ModelState.AddModelError("Username", "Username already exists. Please choose another.");
+                    return View(user);
+                }
+
+                user.IsActive = true;
+                user.CreatedAt = DateTime.Now;
+                
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                // Assign default role "User"
+                var role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "User");
+                if (role != null)
+                {
+                    _context.UserRoles.Add(new UserRole { UserId = user.Id, RoleId = role.Id });
+                    await _context.SaveChangesAsync();
+                }
+
+                return RedirectToAction(nameof(Login));
+            }
+            return View(user);
         }
 
         public async Task<IActionResult> Logout()

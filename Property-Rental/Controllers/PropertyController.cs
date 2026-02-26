@@ -7,7 +7,6 @@ using System;
 
 namespace PropertyRental
 {
-    [Authorize]
     public class PropertyController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,7 +21,8 @@ namespace PropertyRental
         [AllowAnonymous]
         public IActionResult Index()
         {
-            return View(_context.Properties.ToList());
+            var properties = _context.Properties.ToList();
+            return View(properties);
         }
 
         [Authorize(Roles = "Admin,Manager")]
@@ -56,6 +56,7 @@ namespace PropertyRental
                 property.ImagePath = Path.Combine("images", "properties", uniqueFileName).Replace("\\", "/");
             }
 
+            property.IsAvailable = true;
             _context.Properties.Add(property);
             _context.SaveChanges();
             return RedirectToAction("Index");

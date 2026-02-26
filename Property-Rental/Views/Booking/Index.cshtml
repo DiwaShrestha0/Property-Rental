@@ -1,0 +1,120 @@
+@model IEnumerable<PropertyRental.Models.Booking>
+
+@{
+    ViewData["Title"] = "Bookings";
+    var isAuthorized = User.IsInRole("Admin") || User.IsInRole("Manager");
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary"><i class="bi bi-calendar-range me-2"></i> Booking Management</h2>
+        @if (User.IsInRole("User"))
+        {
+            <a asp-controller="Property" asp-action="Index" class="btn btn-success">
+                <i class="bi bi-plus-circle me-1"></i> New Booking
+            </a>
+        }
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-lg">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light text-muted">
+                        <tr>
+                            <th class="ps-4">Property</th>
+                            <th>User</th>
+                            <th>Dates</th>
+                            <th>Total Price</th>
+                            <th>Status</th>
+                            <th class="text-center pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    <i class="bi bi-inbox display-4 d-block mb-3"></i>
+                                    No bookings found.
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="ps-4 align-middle">
+                                        <div class="fw-bold text-dark">@item.Property?.Title</div>
+                                        <small class="text-muted">@item.Property?.Address</small>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                                @(item.User?.Username?.Substring(0, 1).ToUpper() ?? "U")
+                                            </div>
+                                            <span>@item.User?.Username</span>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div>@item.StartDate.ToShortDateString()</div>
+                                        <small class="text-muted">to @item.EndDate.ToShortDateString()</small>
+                                    </td>
+                                    <td class="align-middle fw-bold">
+                                        @item.TotalPrice.ToString("C")
+                                    </td>
+                                    <td class="align-middle">
+                                        @{
+                                            var statusClass = item.Status switch
+                                            {
+                                                "Approved" => "bg-success",
+                                                "Rejected" => "bg-danger",
+                                                "Pending" => "bg-warning text-dark",
+                                                _ => "bg-secondary"
+                                            };
+                                        }
+                                        <span class="badge @statusClass rounded-pill px-3 py-2">
+                                            @item.Status
+                                        </span>
+                                    </td>
+                                    <td class="text-center pe-4 align-middle">
+                                        <div class="btn-group">
+                                            @if (isAuthorized && item.Status == "Pending")
+                                            {
+                                                <form asp-action="Approve" asp-route-id="@item.Id" method="post" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-outline-success me-1 shadow-xs" title="Approve">
+                                                        <i class="bi bi-check-lg"></i> Approve
+                                                    </button>
+                                                </form>
+                                                <form asp-action="Reject" asp-route-id="@item.Id" method="post" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger shadow-xs" title="Reject">
+                                                        <i class="bi bi-x-lg"></i> Reject
+                                                    </button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted small italic">No actions available</span>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .shadow-xs { box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .table > :not(caption) > * > * { border-bottom-width: 0; }
+        .table tbody tr { border-bottom: 1px solid #f8f9fa; transition: background-color 0.2s ease; }
+        .table tbody tr:hover { background-color: #fcfdfe; }
+    </style>
+}

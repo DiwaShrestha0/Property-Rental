@@ -1,41 +1,97 @@
 ﻿@model IEnumerable<PropertyRental.Property>
 
-<h2>Property List</h2>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary fw-bold">Property Listings</h2>
+        @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+        {
+            <a asp-action="Create" class="btn btn-primary shadow-sm">
+                <i class="bi bi-plus-circle me-1"></i> Add New Property
+            </a>
+        }
+    </div>
 
-<a asp-controller="Property" asp-action="Create" class="btn btn-primary">
-    Add New Property
-</a>
+    </div>
 
-<table class="table mt-3">
-    <tr>
-        <th>Image</th>
-        <th>Title</th>
-        <th>Address</th>
-        <th>Price</th>
-        <th>Actions</th>
-    </tr>
 
-    @foreach (var p in Model)
-    {
-        <tr>
-            <td>
-                @if (!string.IsNullOrEmpty(p.ImagePath))
+    <div class="table-responsive card shadow-sm border-0 rounded-lg">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th class="ps-4">Preview</th>
+                    <th>Property Details</th>
+                    <th>Price</th>
+                    <th class="text-center pe-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
                 {
-                    <img src="~/@p.ImagePath" alt="Property Image" style="width:100px; height:auto;" class="img-thumbnail" />
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            <i class="bi bi-search display-4 d-block mb-3"></i>
+                            No properties found matching your criteria.
+                        </td>
+                    </tr>
                 }
                 else
                 {
-                    <span>No Image</span>
+                    foreach (var p in Model)
+                    {
+                        <tr>
+                            <td class="ps-4" style="width: 150px;">
+                                @if (!string.IsNullOrEmpty(p.ImagePath))
+                                {
+                                    <img src="~/@p.ImagePath" alt="@p.Title" class="img-fluid rounded shadow-sm" style="height: 80px; width: 120px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="bg-secondary bg-opacity-10 text-muted rounded d-flex align-items-center justify-content-center" style="height: 80px; width: 120px;">
+                                        <i class="bi bi-image fs-3"></i>
+                                    </div>
+                                }
+                            </td>
+                            <td>
+                                <div class="fw-bold text-dark fs-5">@p.Title</div>
+                                <div class="text-muted small"><i class="bi bi-geo-alt-fill me-1"></i> @p.Address</div>
+                            </td>
+                            <td>
+                                <span class="fw-bold text-success fs-5">@p.Price.ToString("C")</span>
+                                <small class="text-muted">/ night</small>
+                            </td>
+                            <td class="text-center pe-4">
+                                <div class="btn-group btn-group-sm">
+                                    <a asp-controller="Booking" asp-action="Create" asp-route-propertyId="@p.Id" class="btn btn-success px-3 shadow-xs">
+                                        <i class="bi bi-calendar-plus me-1"></i> Book Now
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@p.Id" class="btn btn-outline-info shadow-xs" title="Details">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@p.Id" class="btn btn-outline-warning shadow-xs" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@p.Id" class="btn btn-outline-danger shadow-xs" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
                 }
-            </td>
-            <td>@p.Title</td>
-            <td>@p.Address</td>
-            <td>@p.Price</td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@p.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@p.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@p.Id">Delete</a>
-            </td>
-        </tr>
-    }
-</table>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .rounded-lg { border-radius: 1rem; }
+        .shadow-xs { box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .table thead th { border-top: none; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
+        .transition-hover:hover { transform: scale(1.02); transition: transform 0.2s; }
+    </style>
+}
